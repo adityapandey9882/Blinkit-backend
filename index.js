@@ -14,7 +14,7 @@ const app = express()
 //     origin : process.env.FRONTEND_URL
 // }))
 app.use(cors({
-    origin : "https:blinkit-ecommerc-application.netlify.app",
+    origin : process.env.FRONTEND_URL,
     method : ['GET', 'POST', 'PUT', 'DELETE'],
     credentials : true
 }))
