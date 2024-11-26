@@ -9,10 +9,17 @@ import connectDB from "./config/connectDB.js"
 import userRouter from './route/user.route.js'
 
 const app = express()
+// app.use(cors({
+//     credentials: true,
+//     origin : process.env.FRONTEND_URL
+// }))
 app.use(cors({
-    credentials: true,
-    origin : process.env.FRONTEND_URL
+    origin : "https:blinkit-ecommerc-application.netlify.app",
+    method : ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials : true
 }))
+
+
 app.use(express.json())
 app.use(cookieParser())
 app.use(morgan())
