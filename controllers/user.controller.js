@@ -442,15 +442,14 @@ export async function resetPassword(request,response) {
 }
 
 //refress token controller
-export async function refreshToken(request,response) {
+export async function refreshToken(request,response){
     try {
-        const refreshToken = request.cookies.refreshToken || request?.header?.authorization?.split(" ")[1]  ///[ Bearer token ]
+        const refreshToken = request.cookies.refreshToken || request?.headers?.authorization?.split(" ")[1]  /// [ Bearer token]
 
         if(!refreshToken){
             return response.status(401).json({
-                message : "Unauthorized access",
-                error : "Invalid token",
-                error : true,
+                message : "Invalid token",
+                error  : true,
                 success : false
             })
         }
@@ -464,11 +463,30 @@ export async function refreshToken(request,response) {
                 success : false
             })
         }
-        console.log("verifyToken",verifyToken)
-        // const userId =verifyToken._id
 
-        // const newAccessToken = await generatedAccessToken()
-    } catch(error){
+        const userId = verifyToken?._id
+
+        const newAccessToken = await generatedAccessToken(userId)
+
+        const cookiesOption = {
+            httpOnly : true,
+            secure : true,
+            sameSite : "None"
+        }
+
+        response.cookie('accessToken',newAccessToken,cookiesOption)
+
+        return response.json({
+            message : "New Access token generated",
+            error : false,
+            success : true,
+            data : {
+                accessToken : newAccessToken
+            }
+        })
+
+
+    } catch (error) {
         return response.status(500).json({
             message : error.message || error,
             error : true,
