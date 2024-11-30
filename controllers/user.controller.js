@@ -8,8 +8,6 @@ import uploadImageCloudinary from '../utils/uploadImageCloudinary.js'
 import generatedOtp from '../utils/generatedOtp.js'
 import forgotPasswordTemplate from '../utils/forgotPasswordTemplate.js'
 import jwt from 'jsonwebtoken'
-import dotenv from 'dotenv'
-dotenv.config()
 
 
 //Registration 
@@ -152,6 +150,10 @@ export async function loginController(request,response) {
         const accesstoken = await generatedAccessToken(user._id)
         const refreshToken = await generatedRefreshToken(user._id)
 
+        const updateUser = await UserModel.findByIdAndUpdate(user?._id,{
+            last_login_date : new Date()
+        })
+
         const cookiesOption = {
             httpOnly : true,
             error: true,
@@ -233,6 +235,8 @@ export async function uploadAvatar(request, response) {
 
         return response.json({
             message : "upload profile",
+            success : true,
+            error : false,
             data : {
                 _id : userId,
                 avatar : upload.url
@@ -375,6 +379,12 @@ export async function verifyForgotPasswordOtp(request,response) {
 
         //if otp is not expired
         //otp === user.forgot_password_otp
+
+        const updateUser = await UserModel.findByIdAndUpdate(user._id,{
+            forgot_password_otp : "",
+            forgot_password_expiry : ""
+        })
+
         return response.json({
             message : 'Verify otp  successfull',
             error : false,
@@ -494,3 +504,26 @@ export async function refreshToken(request,response){
         })
     }
 }
+
+//get login user details
+export async function userDetails(request,response) {
+    try {
+        const userId = request.userId
+
+        const user = await UserModel.findById(userId)
+
+        return response.json({
+            message : 'user details',
+            data : user,
+            error : false,
+            success : true
+        })
+    } catch(error) {
+        return response.json({
+            message : "Something is wrong",
+            error : true,
+            success : false
+        })
+    }
+}
+
