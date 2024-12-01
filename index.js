@@ -18,9 +18,10 @@ const app = express()
 //     method : ['GET', 'POST', 'PUT', 'DELETE'],
 //     credentials : true
 // }))
+const alllowedOrigin = 'https://blinkit-ecommerce-application.netlify.app'
 
 const corsOptions = {
-    origin: process.env.FRONTENT_URL,    // Allow the specific frontend origin
+    origin: alllowedOrigin,    // Allow the specific frontend origin
     methods: 'GET, POST, PUT, DELETE', // Allowed HTTP methods
     credentials: true, // Allow credentials (cookies, authorization headers)
     allowedHeaders: 'Content-Type, Authorization', // Allowed headers
