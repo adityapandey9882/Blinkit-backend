@@ -13,12 +13,20 @@ const app = express()
 //     credentials: true,
 //     origin : process.env.FRONTEND_URL
 // }))
-app.use(cors({
-    origin : process.env.FRONTEND_URL,
-    method : ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials : true
-}))
+// app.use(cors({
+//     origin : process.env.FRONTEND_URL,
+//     method : ['GET', 'POST', 'PUT', 'DELETE'],
+//     credentials : true
+// }))
 
+const corsOptions = {
+    origin: process.env.FRONTENT_URL,    // Allow the specific frontend origin
+    methods: 'GET, POST, PUT, DELETE', // Allowed HTTP methods
+    credentials: true, // Allow credentials (cookies, authorization headers)
+    allowedHeaders: 'Content-Type, Authorization', // Allowed headers
+  };
+
+  app.use(cors(corsOptions)); // Use the CORS middleware with the custom options
 
 app.use(express.json())
 app.use(cookieParser())
